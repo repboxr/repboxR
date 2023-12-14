@@ -1,0 +1,11 @@
+Package: repboxR
+Type: Package
+Title: Repbox for R code files in code supplements
+Version: 0.1.0
+Author: Sebastian Kranz
+Maintainer: Sebastian Kranz <sebastian.kranz@uni-ulm.de>
+Description: Repbox for R code files in code supplements
+License: GPL >= 3.0
+Depends: stringtools, restorepoint, glue, dplyr, sourcemodify, repboxUtils, repboxDB, repboxEvaluate
+Encoding: UTF-8
+LazyData: true

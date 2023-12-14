@@ -1,0 +1,69 @@
+repbox_evaluate_chunk_df_for_script = function(project.dir, chunk_df,   env = new.env(parent=globalenv())) {
+  restore.point("repbox_evaluate_chunk_df")
+  store.class = function(x,my_class, visible=TRUE) {
+    my_class = my_class[length(my_class)]
+    attr(x,"org_class") = my_class
+    attr(x,"is_visible") = visible
+    x
+  }
+
+  handler = repboxEvaluate::new_output_handler(
+    value = function(x, visible, row_ind) {
+      restore.point("myhandler")
+
+      if (is.data.frame(x)) {
+        restore.point("myhandler_data_frame")
+        return(store.class(repbox_evaluate_data_frame(x),"data.frame", visible))
+      }
+
+      if (!visible) return(store.class("",class(x), visible))
+      store.class(capture.output(x), class(x), visible)
+    }
+  )
+
+  #debug(evaluate_call)
+  res = repbox_evaluate(chunk_df$mod_code, envir=env,output_handler = handler)
+  df = bind_cols(chunk_df, res)
+
+  # Generate output
+  figure.dir = file.path(project.dir,"repbox","r","figure")
+  if (!dir.exists(figure.dir)) dir.create(figure.dir)
+
+  i = 1
+  out_li = lapply(seq_along(out), function(i) {
+    restore.point("ishfhkshfkdh")
+    li = df$out[[i]]
+    types = names(li)
+
+    out_class = rep("", length(li))
+    visible = rep(TRUE, length(li))
+    value_inds = which(types=="value")
+    out_class[value_inds] = sapply(value_inds, function(j) attr(li[[j]], "org_class"))
+    visible[value_inds] = sapply(value_inds, function(j) attr(li[[j]], "is_visible"))
+
+
+    plot_inds = which(types=="graphics")
+    if (length(plot_inds)>0) {
+      for (j in seq_along(plot_inds)) {
+        plot_file =  paste0(i,"_", j, ".PNG")
+        save_recorded_plot(li[[j]], file.path(figure.dir,plot_file))
+        li[[j]] = plot_file
+      }
+    }
+
+
+    out_text = sapply(li, function(el) paste0(as.character(el), collapse="\n"))
+    data.frame(chunkid = chunk_df[i,"id"], out_type=types, out_text = out_text, out_class=out_class, is_visible = visible, is_html = out_class=="data.frame")
+  })
+  out_df = do.call(rbind, out_li)
+
+  list(chunk_df = chunk_df, out_df=out_df)
+}
+
+save_recorded_plot = function(x, file) {
+  grDevices::png(file)
+  print(x)
+  dev.off()
+}
+
+

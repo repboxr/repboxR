@@ -1,0 +1,9 @@
+pkg,fun,file.args,mode
+base,load,file,r
+base,source,file,r
+utils,read.csv,file,r
+base,readRDS,file,r
+base,saveRDS,file,w
+rio,import,file,r
+rio,export,file,w
+haven,read_dta,file,r
