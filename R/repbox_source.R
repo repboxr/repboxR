@@ -23,7 +23,7 @@ mysource = function() {
 }
 
 
-repbox.source.r = function(rfile,project.dir, env=repbox.env(), opts=rbr.opts()) {
+repbox.source.r = function(rfile,project_dir, env=repbox.env(), opts=rbr.opts()) {
   restore.point("repbox.source.r")
   options(repbox.rfile = rfile)
   id = tools::file_path_sans_ext(basename(rfile))
@@ -32,7 +32,7 @@ repbox.source.r = function(rfile,project.dir, env=repbox.env(), opts=rbr.opts())
   #repbox.source(rfile)
   if (!opts$use.spin) {
     if (opts$use.log) {
-      log.file = file.path(project.dir, paste0("repbox/r/log/",id,".log"))
+      log.file = file.path(project_dir, paste0("repbox/r/log/",id,".log"))
       if (file.exists(log.file)) file.remove(log.file)
       con <- file(log.file)
       sink(con, append=TRUE)
@@ -46,7 +46,7 @@ repbox.source.r = function(rfile,project.dir, env=repbox.env(), opts=rbr.opts())
       try(close(con))
     }
   } else if (opts$use.spin) {
-    log.file = file.path(project.dir, paste0("repbox/r/log/",id,".html"))
+    log.file = file.path(project_dir, paste0("repbox/r/log/",id,".html"))
     knitr::stitch_rhtml(script=rfile,output=log.file, envir = env)
   }
 }

@@ -61,8 +61,8 @@ repbox.rfile = function() {
 repbox.output.counter = function() {
   getOption("repbox.output.counter")
 }
-repbox.project.dir = function() {
-  getOption("repbox.project.dir")
+repbox.project_dir = function() {
+  getOption("repbox.project_dir")
 }
 
 repbox.sup.dir = function() {

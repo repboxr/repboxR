@@ -14,9 +14,9 @@ repbox_somo_to_chunk_df = function(somo, script_nums) {
   chunk_df
 }
 
-repbox_save_slim_chunk_dfs = function(project.dir, chunk_df) {
+repbox_save_slim_chunk_dfs = function(project_dir, chunk_df) {
   restore.point("repbox_save_slim_chunk_dfs")
-  out.dir = file.path(project.dir, "repbox","r","chunks")
+  out.dir = file.path(project_dir, "repbox","r","chunks")
   if (!dir.exists(out.dir)) dir.create(out.dir)
   script_nums = unique(chunk_df$script_num)
   chunk_df = chunk_df[,c("script_num","chunkid","mod_code")]

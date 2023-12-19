@@ -3,26 +3,26 @@ example = function() {
   library(repboxR)
 
   parcels = list()
-  project.dir = "C:/libraries/repbox/projects_reg/testr"
-  project.dir = "C:/libraries/repbox/projects_dv/BPON3K"
+  project_dir = "C:/libraries/repbox/projects_reg/testr"
+  project_dir = "C:/libraries/repbox/projects_dv/BPON3K"
   steps = repbox_run_steps_from(static_code=TRUE, art=FALSE)
-  repbox_run_project(project.dir,lang=NULL, steps=steps)
-  rstudioapi::filesPaneNavigate(project.dir)
+  repbox_run_project(project_dir,lang=NULL, steps=steps)
+  rstudioapi::filesPaneNavigate(project_dir)
 
   opts = repbox.r.opts(ignore.sourced.files = TRUE, use.log=FALSE, extract.reg.info = TRUE, #just.files="tab_1_summary_stats.R"
   )
 
-  parcels = repbox_project_static_analyse_r(project.dir, opts=opts)
-  parcels = repbox_project_run_r(project.dir, parcels=parcels, opts=opts)
-  parcels = repbox_project_extract_r_results(project.dir, parcels, opts=opts)
+  parcels = repbox_project_static_analyse_r(project_dir, opts=opts)
+  parcels = repbox_project_run_r(project_dir, parcels=parcels, opts=opts)
+  parcels = repbox_project_extract_r_results(project_dir, parcels, opts=opts)
 
-  html = html_all_r(project.dir)
-  html.dir = file.path(project.dir,"reports")
+  html = html_all_r(project_dir)
+  html.dir = file.path(project_dir,"reports")
   repbox_save_html(html %>% repbox_add_html_header(), "r_code.html", html.dir)
   rstudioapi::filesPaneNavigate(html.dir)
 
 
-  rstudioapi::filesPaneNavigate(project.dir)
+  rstudioapi::filesPaneNavigate(project_dir)
 
   rstudioapi::filesPaneNavigate("~/repboxR/R")
   rstudioapi::filesPaneNavigate("C:/libraries/sourcemodify")
@@ -30,21 +30,21 @@ example = function() {
   rstudioapi::filesPaneNavigate("C:/libraries/repbox/repboxDB/inst/regdb")
 }
 
-repbox_project_analyse_r = function(project.dir,parcels=list(), opts=repbox.r.opts()) {
+repbox_project_analyse_r = function(project_dir,parcels=list(), opts=repbox.r.opts()) {
   restore.point("repbox_project_analyse_r")
-  parcels = repbox_project_static_analyse_r(project.dir,parcels=parcels, opts=opts)
-  parcels = repbox_project_run_r(project.dir, parcels=parcels, opts=opts)
-  parcels = repbox_project_extract_r_results(project.dir, parcels, opts=opts)
+  parcels = repbox_project_static_analyse_r(project_dir,parcels=parcels, opts=opts)
+  parcels = repbox_project_run_r(project_dir, parcels=parcels, opts=opts)
+  parcels = repbox_project_extract_r_results(project_dir, parcels, opts=opts)
   parcels
 }
 
 
 
 #' Perform static analysis of R code files
-repbox_project_static_analyse_r = function(project.dir,parcels=list(), opts=repbox.r.opts()) {
+repbox_project_static_analyse_r = function(project_dir,parcels=list(), opts=repbox.r.opts()) {
   restore.point("repbox_project_static_analyse_r")
 
-  parcels = regdb_load_parcels(project.dir,"r_source",parcels)
+  parcels = regdb_load_parcels(project_dir,"r_source",parcels)
   source_df = parcels$r_source$script_source
   script_nums = source_df$script_num[source_df$file_type=="r"]
   somo = somo_init(code=source_df$text, files=source_df$file_path)
@@ -53,7 +53,7 @@ repbox_project_static_analyse_r = function(project.dir,parcels=list(), opts=repb
 
   somo = repbox_r_somo_info(somo)
 
-  parcels = repbox_r_static_make_parcels(project.dir, somo, script_nums, parcels)
+  parcels = repbox_r_static_make_parcels(project_dir, somo, script_nums, parcels)
   parcels$.somo = list(somo=somo)
   parcels
 }
@@ -61,35 +61,35 @@ repbox_project_static_analyse_r = function(project.dir,parcels=list(), opts=repb
 
 
 #' Run R code files
-repbox_project_run_r = function(project.dir,parcels=list(), opts=repbox.r.opts()) {
+repbox_project_run_r = function(project_dir,parcels=list(), opts=repbox.r.opts()) {
   restore.point("repbox_project_run_r")
   verbose = opts$verbose
 
-  repbox.dir = file.path(project.dir,"repbox/r")
+  repbox.dir = file.path(project_dir,"repbox/r")
   if (!dir.exists(repbox.dir)) dir.create(repbox.dir,recursive = TRUE)
 
 
   # Clear log, chunk, reg and figure directories
-  del.dirs = paste0(project.dir, "/repbox/r/", c("log","chunks","figure","reg"))
+  del.dirs = paste0(project_dir, "/repbox/r/", c("log","chunks","figure","reg"))
   del.files = list.files(del.dirs,full.names = TRUE)
   file.remove(del.files)
 
 
-  parcels = regdb_load_parcels(project.dir, c("r_static","r_source"))
+  parcels = regdb_load_parcels(project_dir, c("r_static","r_source"))
   source_df = parcels$r_source$script_source
 
   # No R script found. Possibly static analysis did not run
   if (NROW(source_df)==0) {
-    rfiles = list.files(file.path(project.dir, "org"),glob2rx("*.r"),full.names = TRUE,recursive = TRUE,ignore.case = TRUE)
+    rfiles = list.files(file.path(project_dir, "org"),glob2rx("*.r"),full.names = TRUE,recursive = TRUE,ignore.case = TRUE)
     if (length(rfiles)==0) {
       if (opts$verbose)
-        cat(paste0("\n  No R code files found in ", project.dir,"\n"))
+        cat(paste0("\n  No R code files found in ", project_dir,"\n"))
       return(parcels)
     }
 
 
     # Run static code analysis
-    parcels = repbox_project_static_analyse_r(project.dir,parcels, opts)
+    parcels = repbox_project_static_analyse_r(project_dir,parcels, opts)
     source_df = parcels$r_source$script_source
   }
 
@@ -103,19 +103,19 @@ repbox_project_run_r = function(project.dir,parcels=list(), opts=repbox.r.opts()
     somo = somo_init(code=source_df$text, files=source_df$file_path)
   }
 
-  project = basename(project.dir)
-  sup.dir = file.path(project.dir, "mod")
+  project = basename(project_dir)
+  sup.dir = file.path(project_dir, "mod")
 
-  opts$project.dir = project.dir
+  opts$project_dir = project_dir
   opts$sup.dir = sup.dir
 
   rows = which(source_df$file_type == "r")
   opts$script_df = as.data.frame(source_df[rows,c("script_num","file_path")])
 
-  saveRDS(opts, file.path(project.dir,"repbox/r/r_opts.Rds"))
+  saveRDS(opts, file.path(project_dir,"repbox/r/r_opts.Rds"))
 
   if (!dir.exists(sup.dir)) {
-    org.dir = file.path(project.dir, "org")
+    org.dir = file.path(project_dir, "org")
     copy.dir(org.dir, sup.dir,copy.date=TRUE)
     unzip.zips(sup.dir)
   }
@@ -128,14 +128,14 @@ repbox_project_run_r = function(project.dir,parcels=list(), opts=repbox.r.opts()
 
   # Modify R source files to include
   # path correction and regression info storage
-  somo = repbox_somo_modify_r_sources(project.dir,somo, opts)
-  repbox_write_modified_r_sources(project.dir, somo)
+  somo = repbox_somo_modify_r_sources(project_dir,somo, opts)
+  repbox_write_modified_r_sources(project_dir, somo)
 
   # Create chunk_df with modified source code
   chunk_df = repbox_somo_to_chunk_df(somo, script_nums)
-  repbox_save_slim_chunk_dfs(project.dir, chunk_df)
+  repbox_save_slim_chunk_dfs(project_dir, chunk_df)
   parcels$r_chunk = list(r_chunk=chunk_df)
-  regdb_save_parcels(parcels[c("r_chunk")], file.path(project.dir,"repbox/regdb"))
+  regdb_save_parcels(parcels[c("r_chunk")], file.path(project_dir,"repbox/regdb"))
 
 
   # Ignore files that are sourced in other files
@@ -172,15 +172,15 @@ repbox_project_run_r = function(project.dir,parcels=list(), opts=repbox.r.opts()
   for (i in seq_along(rfiles)) {
     rfile = rfiles[i]
     cat(paste0("\nRun ",i, " of ", NROW(rfiles),": ", rfile,"\n"))
-    repbox.run.r.file(rfile,script_num = script_nums[i], project.dir, opts=opts)
+    repbox.run.r.file(rfile,script_num = script_nums[i], project_dir, opts=opts)
   }
   return(parcels)
 }
 
-repbox.make.r.run.script = function(rfile, script_num, project.dir, opts=rbr.opts()) {
+repbox.make.r.run.script = function(rfile, script_num, project_dir, opts=rbr.opts()) {
   restore.point("repbox.make.r.run.script")
-  sup.dir = file.path(project.dir,"mod")
-  opts.file = file.path(project.dir,"repbox/r/r_opts.Rds")
+  sup.dir = file.path(project_dir,"mod")
+  opts.file = file.path(project_dir,"repbox/r/r_opts.Rds")
   glob_head_code = paste0('
 suppressMessages(library(repboxRfun))
 opts = readRDS("', opts.file, '")
@@ -199,11 +199,11 @@ options(.repbox.options = opts)
     main_code = paste0('
 env = new.env(parent=globalenv())
 options(.repbox.env = env)
-repbox_evaluate_script_chunks("',project.dir,'",', script_num, ', env)
+repbox_evaluate_script_chunks("',project_dir,'",', script_num, ', env)
 ')
 
   } else if (opts$eval_mode == "source") {
-    log.file = file.path(project.dir, paste0("repbox/r/log/",id,".log"))
+    log.file = file.path(project_dir, paste0("repbox/r/log/",id,".log"))
     if (file.exists(log.file)) file.remove(log.file)
 head_code = paste0('
 con <- file("',log.file,'")
@@ -228,14 +228,14 @@ repbox.stitch.source("', rfile, '")
   }
 
   code = paste0(glob_head_code, head_code, main_code, tail_code)
-  temp.file = file.path(project.dir, "repbox/r/run_script.R")
+  temp.file = file.path(project_dir, "repbox/r/run_script.R")
   writeLines(code, temp.file)
   return(temp.file)
 }
 
-repbox.run.r.file = function(rfile, script_num, project.dir, opts=rbr.opts()) {
+repbox.run.r.file = function(rfile, script_num, project_dir, opts=rbr.opts()) {
   restore.point("repbox.run.r.file")
-  temp.file = repbox.make.r.run.script(rfile, script_num, project.dir, opts)
+  temp.file = repbox.make.r.run.script(rfile, script_num, project_dir, opts)
   cmd = paste0(opts$r.bin, '"',temp.file,'"')
   system(cmd,wait=TRUE)
 
@@ -244,8 +244,8 @@ repbox.run.r.file = function(rfile, script_num, project.dir, opts=rbr.opts()) {
 
 
 
-get.project.org.rfiles = function(project.dir) {
-  rfiles = list.files(file.path(project.dir,"org"), glob2rx("*.r"), ignore.case=TRUE, full.names=TRUE, recursive=TRUE)
+get.project.org.rfiles = function(project_dir) {
+  rfiles = list.files(file.path(project_dir,"org"), glob2rx("*.r"), ignore.case=TRUE, full.names=TRUE, recursive=TRUE)
   rfiles
 }
 

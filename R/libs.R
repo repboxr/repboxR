@@ -2,8 +2,8 @@
 # of a code supplement and to install them.
 
 example = function() {
-  project.dir = "~/repbox/projects_dv/BPON3K"
-  libs = find.project.r.libs(project.dir)
+  project_dir = "~/repbox/projects_dv/BPON3K"
+  libs = find.project.r.libs(project_dir)
   install.missing.r.libs(libs[2])
   install.missing.r.libs(libs)
 }
@@ -24,7 +24,7 @@ install.missing.r.libs = function(libs, verbose=FALSE) {
 # Find all R package dependencies of a code supplement
 # Not used anymore. Replaced by analysis in  static.R
 
-find.project.r.libs = function(project.dir, sup.dir = file.path(project.dir,"org")) {
+find.project.r.libs = function(project_dir, sup.dir = file.path(project_dir,"org")) {
   rfiles = list.files(sup.dir, glob2rx("*.r"), ignore.case=TRUE, full.names=TRUE, recursive=TRUE)
   libs = lapply(rfiles, find.r.libs) %>%
     unlist() %>%

@@ -30,11 +30,11 @@ init.repbox.dv.project = function(doi, projects.dir = "~/repbox/projects_dv", do
     stop("Provided doi is no default DATAVERSE doi.")
   }
   zip.file = download.dataverse.zip(doi, downloads.dir, overwrite=FALSE)
-  project.dir = file.path(projects.dir,project)
-  #if (!dir.exists(project.dir)) dir.create(project.dir)
-  #unzip(zip.file,exdir=file.path(project.dir,"org"))
+  project_dir = file.path(projects.dir,project)
+  #if (!dir.exists(project_dir)) dir.create(project_dir)
+  #unzip(zip.file,exdir=file.path(project_dir,"org"))
 
-  repboxMain::init.repbox.project(project.dir, sup.zip = zip.file)
+  repboxMain::init.repbox.project(project_dir, sup.zip = zip.file)
 }
 
 download.dataverse.zip = function(doi, downloads.dir = "~/repbox/dataverse_zip", overwrite = FALSE) {

@@ -1,9 +1,9 @@
 # Functions that directly modify the R source files before running them
 example = function() {
-  project.dir = "~/repbox/projects2/testsupp"
+  project_dir = "~/repbox/projects2/testsupp"
   make.file.path.funs.rds("/home/rstudio/repbox/repboxR/inst/misc")
   r.file = "~/repbox/projects2/testsupp/org/code/test.R"
-  modify.project.r.sources(project.dir)
+  modify.project.r.sources(project_dir)
 }
 
 
@@ -44,9 +44,9 @@ make.file.path.funs.rds = function(save=TRUE) {
 
 
 # si is the tibble returned from calling project.static.r.info
-repbox_somo_modify_r_sources = function(project.dir,somo, opts) {
+repbox_somo_modify_r_sources = function(project_dir,somo, opts) {
   restore.point("repbox_somo_modify_r_sources")
-  sup.dir = normalizePath(file.path(project.dir, "mod"), mustWork = FALSE)
+  sup.dir = normalizePath(file.path(project_dir, "mod"), mustWork = FALSE)
 
   call_pd = somo$call_pd
   called_funs = unique(call_pd$fun)
@@ -87,10 +87,10 @@ repbox_somo_modify_r_sources = function(project.dir,somo, opts) {
 }
 
 
-repbox_write_modified_r_sources = function(project.dir, somo) {
+repbox_write_modified_r_sources = function(project_dir, somo) {
   restore.point("repbox_write_modified_r_sources")
   code_df = somo$code_df
-  sup.dir = file.path(project.dir, "mod")
+  sup.dir = file.path(project_dir, "mod")
   files = file.path(sup.dir, code_df$file)
   for (i in seq_along(files)) {
     write_utf8(code_df$mod_code[[i]], files[[i]])
@@ -99,9 +99,9 @@ repbox_write_modified_r_sources = function(project.dir, somo) {
 
 
 # si is the tibble returned from calling project.static.r.info
-modify.project.r.sources = function(project.dir, si, verbose=TRUE) {
+modify.project.r.sources = function(project_dir, si, verbose=TRUE) {
   restore.point("modify.project.r.sources")
-  org.dir = normalizePath(file.path(project.dir, "org"), mustWork = FALSE)
+  org.dir = normalizePath(file.path(project_dir, "org"), mustWork = FALSE)
   r.files = si$org.rfile
 
   i = 1
@@ -112,7 +112,7 @@ modify.project.r.sources = function(project.dir, si, verbose=TRUE) {
     }
     res = modify.repbox.r.source(r.file, somo=si$somo[[i]])
     new.code = res$new.code
-    mod.file = file.path(project.dir, "mod",str.right.of(r.file, paste0(org.dir,"/")))
+    mod.file = file.path(project_dir, "mod",str.right.of(r.file, paste0(org.dir,"/")))
     write_utf8(new.code, mod.file)
   }
   return(invisible())

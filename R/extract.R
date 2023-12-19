@@ -2,13 +2,13 @@
 #'
 #' @param project_dir The project directory
 #' @param parcels list of data parcels
-repbox_project_extract_r_results = function(project.dir, parcels=list(), opts=rbr.opts()) {
+repbox_project_extract_r_results = function(project_dir, parcels=list(), opts=rbr.opts()) {
   restore.point("repbox_project_extract_r_results")
 
-  parcels = regdb_load_parcels(project.dir, "r_chunk",parcels)
+  parcels = regdb_load_parcels(project_dir, "r_chunk",parcels)
 
   # General outcomes
-  dir = file.path(project.dir, "repbox/r/chunks")
+  dir = file.path(project_dir, "repbox/r/chunks")
   files = list.files(dir, glob2rx("out_*.Rds"),full.names = TRUE)
 
   out_df = lapply(files, readRDS) %>% bind_rows() %>% as_tibble() %>%
@@ -20,19 +20,19 @@ repbox_project_extract_r_results = function(project.dir, parcels=list(), opts=rb
   out_df = left_join(out_df, select(chunk_df, script_num, chunkid), by=c("chunkid"))
 
   parcels$r_chunk_out = list(r_chunk_out=out_df)
-  regdb_save_parcels(parcels["r_chunk_out"], file.path(project.dir, "repbox/regdb"))
+  regdb_save_parcels(parcels["r_chunk_out"], file.path(project_dir, "repbox/regdb"))
 
-  parcels = extractr_r_reg_results(project.dir, parcels)
+  parcels = extractr_r_reg_results(project_dir, parcels)
 
   parcels
 }
 
-extractr_r_reg_results = function(project.dir, parcels=list()) {
+extractr_r_reg_results = function(project_dir, parcels=list()) {
   restore.point("extract_r_reg_results")
 
   # Extract regression information
 
-  reg.dir = file.path(project.dir, "repbox/r/reg")
+  reg.dir = file.path(project_dir, "repbox/r/reg")
   files = list.files(reg.dir, glob2rx("call_*.Rds"),full.names = TRUE)
   if (length(files)==0) return(parcels)
 
@@ -52,7 +52,7 @@ extractr_r_reg_results = function(project.dir, parcels=list()) {
   info$reg.tab = tidy.li
 
   # Save regression information in internal format
-  saveRDS(info, file.path(project.dir, "repbox","r","reg_results.Rds"))
+  saveRDS(info, file.path(project_dir, "repbox","r","reg_results.Rds"))
 
   # Transform into regDB specifications
   reg_df = info %>%
@@ -70,7 +70,7 @@ extractr_r_reg_results = function(project.dir, parcels=list()) {
   regdb_check_data(regcoef, "regcoef")
 
   parcels$r_reg = list(reg=reg_df, regcoef=regcoef)
-  regdb_save_parcels(parcels["r_reg"], file.path(project.dir, "repbox/regdb"))
+  regdb_save_parcels(parcels["r_reg"], file.path(project_dir, "repbox/regdb"))
   parcels
 
 }

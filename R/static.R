@@ -3,10 +3,10 @@
 # Currently we want to know if other files are sourced
 # and which packages are installed
 
-repbox_r_static_make_parcels = function(project.dir, somo, script_nums, parcels=list()) {
+repbox_r_static_make_parcels = function(project_dir, somo, script_nums, parcels=list()) {
   restore.point("repbox_r_static_make_parcels")
 
-  artid = basename(project.dir)
+  artid = basename(project_dir)
 
   pd = somo$pd
   call_pd = somo$call_pd
@@ -111,7 +111,7 @@ repbox_r_static_make_parcels = function(project.dir, somo, script_nums, parcels=
     mutate(artid=artid, script_num = script_nums[code_ind])
 
   # Save source calls
-  parcels = regdb_load_parcels(project.dir, "r_source",parcels)
+  parcels = regdb_load_parcels(project_dir, "r_source",parcels)
   script_df = parcels$r_source$script_source %>%
     mutate(sourced_base = basename(file_path)) %>%
     select(sourced_script_num = script_num, sourced_base)
@@ -136,7 +136,7 @@ repbox_r_static_make_parcels = function(project.dir, somo, script_nums, parcels=
 
 
   parcels$r_static = list(r_fun=fun_df, r_call=call_df, r_comment = com_df, r_load_pkg = pkg_df, r_source_call=source_calls)
-  regdb_save_parcels(parcels[c("r_static")],dir = file.path(project.dir, "repbox","regdb"))
+  regdb_save_parcels(parcels[c("r_static")],dir = file.path(project_dir, "repbox","regdb"))
 
   parcels
 
