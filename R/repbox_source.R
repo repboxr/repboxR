@@ -23,7 +23,7 @@ mysource = function() {
 }
 
 
-repbox.source.r = function(rfile,project_dir, env=repbox.env(), opts=rbr.opts()) {
+repbox.source.r = function(rfile,project_dir, env=repbox.env(), opts=rbr_opts()) {
   restore.point("repbox.source.r")
   options(repbox.rfile = rfile)
   id = tools::file_path_sans_ext(basename(rfile))

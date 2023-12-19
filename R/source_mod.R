@@ -118,7 +118,7 @@ modify.project.r.sources = function(project_dir, si, verbose=TRUE) {
   return(invisible())
 }
 
-modify.repbox.r.source = function(r.file, somo=NULL, opts=rbr.opts()) {
+modify.repbox.r.source = function(r.file, somo=NULL, opts=rbr_opts()) {
   restore.point("modify.repbox.r.source")
 
   if (is.null(somo)) {

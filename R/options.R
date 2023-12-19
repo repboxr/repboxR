@@ -13,7 +13,7 @@
 #' @param middleman.call.stack.skip How many calls to skip in the call stack when printing information inside middleman functions.
 #' @param show.spin.log If TRUE shows output of spin calls. Mostly relevant when "source" call is replaced by a "spin" call.
 #' @param recomplile.file.path.funs If TRUE always recompile the Rds file that specifies for which functions file paths shall be repaired using the source csv file. This argument will only be set TRUE during development.
-repbox.r.opts = function(ignore.sourced.files=TRUE,just.files=NULL,verbose=TRUE, eval_mode = c("evaluate","source","spin")[1], use.log= (eval_mode=="source"), extract.reg.info=TRUE, adapt.source.calls=TRUE, install.missing.libs = FALSE, r.bin = "Rscript ", verbose.middleman = FALSE, middleman.call.stack.skip = 4, show.spin.log = TRUE, recompile.file.path.funs = TRUE, save_plot_rds=FALSE, invisible_max_char=500, visible_max_char=3000, ...) {
+repbox_r_opts = function(ignore.sourced.files=TRUE,just.files=NULL,verbose=TRUE, eval_mode = c("evaluate","source","spin")[1], use.log= (eval_mode=="source"), extract.reg.info=TRUE, adapt.source.calls=TRUE, install.missing.libs = FALSE, r.bin = "Rscript ", verbose.middleman = FALSE, middleman.call.stack.skip = 4, show.spin.log = TRUE, recompile.file.path.funs = TRUE, save_plot_rds=FALSE, invisible_max_char=500, visible_max_char=3000, ...) {
   opts = list(
     ignore.sourced.files=ignore.sourced.files,
     just.files = just.files,
@@ -37,7 +37,7 @@ repbox.r.opts = function(ignore.sourced.files=TRUE,just.files=NULL,verbose=TRUE,
 }
 
 #' Retrieves options for repboxR
-rbr.opts = function(name=NULL) {
+rbr_opts = function(name=NULL) {
   opts = getOption("repbox.r.options")
   if (is.null(name)) return(opts)
   opts[[name]]

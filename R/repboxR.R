@@ -9,7 +9,7 @@ example = function() {
   repbox_run_project(project_dir,lang=NULL, steps=steps)
   rstudioapi::filesPaneNavigate(project_dir)
 
-  opts = repbox.r.opts(ignore.sourced.files = TRUE, use.log=FALSE, extract.reg.info = TRUE, #just.files="tab_1_summary_stats.R"
+  opts = repbox_r_opts(ignore.sourced.files = TRUE, use.log=FALSE, extract.reg.info = TRUE, #just.files="tab_1_summary_stats.R"
   )
 
   parcels = repbox_project_static_analyse_r(project_dir, opts=opts)
@@ -30,7 +30,7 @@ example = function() {
   rstudioapi::filesPaneNavigate("C:/libraries/repbox/repboxDB/inst/regdb")
 }
 
-repbox_project_analyse_r = function(project_dir,parcels=list(), opts=repbox.r.opts()) {
+repbox_project_analyse_r = function(project_dir,parcels=list(), opts=repbox_r_opts()) {
   restore.point("repbox_project_analyse_r")
   parcels = repbox_project_static_analyse_r(project_dir,parcels=parcels, opts=opts)
   parcels = repbox_project_run_r(project_dir, parcels=parcels, opts=opts)
@@ -41,7 +41,7 @@ repbox_project_analyse_r = function(project_dir,parcels=list(), opts=repbox.r.op
 
 
 #' Perform static analysis of R code files
-repbox_project_static_analyse_r = function(project_dir,parcels=list(), opts=repbox.r.opts()) {
+repbox_project_static_analyse_r = function(project_dir,parcels=list(), opts=repbox_r_opts()) {
   restore.point("repbox_project_static_analyse_r")
 
   parcels = regdb_load_parcels(project_dir,"r_source",parcels)
@@ -61,7 +61,7 @@ repbox_project_static_analyse_r = function(project_dir,parcels=list(), opts=repb
 
 
 #' Run R code files
-repbox_project_run_r = function(project_dir,parcels=list(), opts=repbox.r.opts()) {
+repbox_project_run_r = function(project_dir,parcels=list(), opts=repbox_r_opts()) {
   restore.point("repbox_project_run_r")
   verbose = opts$verbose
 
@@ -177,7 +177,7 @@ repbox_project_run_r = function(project_dir,parcels=list(), opts=repbox.r.opts()
   return(parcels)
 }
 
-repbox.make.r.run.script = function(rfile, script_num, project_dir, opts=rbr.opts()) {
+repbox.make.r.run.script = function(rfile, script_num, project_dir, opts=rbr_opts()) {
   restore.point("repbox.make.r.run.script")
   sup.dir = file.path(project_dir,"mod")
   opts.file = file.path(project_dir,"repbox/r/r_opts.Rds")
@@ -233,7 +233,7 @@ repbox.stitch.source("', rfile, '")
   return(temp.file)
 }
 
-repbox.run.r.file = function(rfile, script_num, project_dir, opts=rbr.opts()) {
+repbox.run.r.file = function(rfile, script_num, project_dir, opts=rbr_opts()) {
   restore.point("repbox.run.r.file")
   temp.file = repbox.make.r.run.script(rfile, script_num, project_dir, opts)
   cmd = paste0(opts$r.bin, '"',temp.file,'"')

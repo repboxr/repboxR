@@ -2,7 +2,7 @@
 #'
 #' @param project_dir The project directory
 #' @param parcels list of data parcels
-repbox_project_extract_r_results = function(project_dir, parcels=list(), opts=rbr.opts()) {
+repbox_project_extract_r_results = function(project_dir, parcels=list(), opts=rbr_opts()) {
   restore.point("repbox_project_extract_r_results")
 
   parcels = regdb_load_parcels(project_dir, "r_chunk",parcels)
