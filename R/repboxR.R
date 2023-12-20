@@ -27,7 +27,7 @@ example = function() {
   rstudioapi::filesPaneNavigate("~/repboxR/R")
   rstudioapi::filesPaneNavigate("C:/libraries/sourcemodify")
   rstudioapi::filesPaneNavigate("C:/libraries/repbox/repboxR/R")
-  rstudioapi::filesPaneNavigate("C:/libraries/repbox/repboxDB/inst/regdb")
+  rstudioapi::filesPaneNavigate("C:/libraries/repbox/repboxDB/inst/repdb")
 }
 
 repbox_project_analyse_r = function(project_dir,parcels=list(), opts=repbox_r_opts()) {
@@ -44,7 +44,7 @@ repbox_project_analyse_r = function(project_dir,parcels=list(), opts=repbox_r_op
 repbox_project_static_analyse_r = function(project_dir,parcels=list(), opts=repbox_r_opts()) {
   restore.point("repbox_project_static_analyse_r")
 
-  parcels = regdb_load_parcels(project_dir,"r_source",parcels)
+  parcels = repdb_load_parcels(project_dir,"r_source",parcels)
   source_df = parcels$r_source$script_source
   script_nums = source_df$script_num[source_df$file_type=="r"]
   somo = somo_init(code=source_df$text, files=source_df$file_path)
@@ -75,7 +75,7 @@ repbox_project_run_r = function(project_dir,parcels=list(), opts=repbox_r_opts()
   file.remove(del.files)
 
 
-  parcels = regdb_load_parcels(project_dir, c("r_static","r_source"))
+  parcels = repdb_load_parcels(project_dir, c("r_static","r_source"))
   source_df = parcels$r_source$script_source
 
   # No R script found. Possibly static analysis did not run
@@ -135,7 +135,7 @@ repbox_project_run_r = function(project_dir,parcels=list(), opts=repbox_r_opts()
   chunk_df = repbox_somo_to_chunk_df(somo, script_nums)
   repbox_save_slim_chunk_dfs(project_dir, chunk_df)
   parcels$r_chunk = list(r_chunk=chunk_df)
-  regdb_save_parcels(parcels[c("r_chunk")], file.path(project_dir,"repbox/regdb"))
+  repdb_save_parcels(parcels[c("r_chunk")], file.path(project_dir,"repbox/repdb"))
 
 
   # Ignore files that are sourced in other files
