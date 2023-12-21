@@ -20,7 +20,7 @@ repbox_project_extract_r_results = function(project_dir, parcels=list(), opts=rb
   out_df = left_join(out_df, select(chunk_df, script_num, chunkid), by=c("chunkid"))
 
   parcels$r_chunk_out = list(r_chunk_out=out_df)
-  repdb_save_parcels(parcels["r_chunk_out"], file.path(project_dir, "repbox/repdb"))
+  repdb_save_parcels(parcels["r_chunk_out"], file.path(project_dir, "repdb"))
 
   parcels = extractr_r_reg_results(project_dir, parcels)
 
@@ -70,7 +70,7 @@ extractr_r_reg_results = function(project_dir, parcels=list()) {
   repdb_check_data(regcoef, "regcoef")
 
   parcels$r_reg = list(reg=reg_df, regcoef=regcoef)
-  repdb_save_parcels(parcels["r_reg"], file.path(project_dir, "repbox/repdb"))
+  repdb_save_parcels(parcels["r_reg"], file.path(project_dir, "repdb"))
   parcels
 
 }

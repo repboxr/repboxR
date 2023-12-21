@@ -135,7 +135,7 @@ repbox_project_run_r = function(project_dir,parcels=list(), opts=repbox_r_opts()
   chunk_df = repbox_somo_to_chunk_df(somo, script_nums)
   repbox_save_slim_chunk_dfs(project_dir, chunk_df)
   parcels$r_chunk = list(r_chunk=chunk_df)
-  repdb_save_parcels(parcels[c("r_chunk")], file.path(project_dir,"repbox/repdb"))
+  repdb_save_parcels(parcels[c("r_chunk")], file.path(project_dir,"repdb"))
 
 
   # Ignore files that are sourced in other files

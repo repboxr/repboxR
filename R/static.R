@@ -136,7 +136,7 @@ repbox_r_static_make_parcels = function(project_dir, somo, script_nums, parcels=
 
 
   parcels$r_static = list(r_fun=fun_df, r_call=call_df, r_comment = com_df, r_load_pkg = pkg_df, r_source_call=source_calls)
-  repdb_save_parcels(parcels[c("r_static")],dir = file.path(project_dir, "repbox","repdb"))
+  repdb_save_parcels(parcels[c("r_static")],dir = file.path(project_dir, "repdb"))
 
   parcels
 
