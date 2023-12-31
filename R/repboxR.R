@@ -47,6 +47,10 @@ repbox_project_static_analyse_r = function(project_dir,parcels=list(), opts=repb
   parcels = repdb_load_parcels(project_dir,"r_source",parcels)
   source_df = parcels$r_source$script_source
   script_nums = source_df$script_num[source_df$file_type=="r"]
+  if (length(script_nums)==0) {
+    return(parcels)
+  }
+
   somo = somo_init(code=source_df$text, files=source_df$file_path)
 
   pd = somo$pd

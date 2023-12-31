@@ -11,16 +11,19 @@ repbox_project_extract_r_results = function(project_dir, parcels=list(), opts=rb
   dir = file.path(project_dir, "repbox/r/chunks")
   files = list.files(dir, glob2rx("out_*.Rds"),full.names = TRUE)
 
-  out_df = lapply(files, readRDS) %>% bind_rows() %>% as_tibble() %>%
-    repdb_null_to_empty("r_chunk_out")
+  if (length(files)>0) {
+    out_df = lapply(files, readRDS) %>% bind_rows() %>% as_tibble() %>%
+      repdb_null_to_empty("r_chunk_out")
 
-  chunk_df = parcels$r_chunk$r_chunk %>%
-    repdb_null_to_empty("r_chunk")
+    chunk_df = parcels$r_chunk$r_chunk %>%
+      repdb_null_to_empty("r_chunk")
 
-  out_df = left_join(out_df, select(chunk_df, script_num, chunkid), by=c("chunkid"))
+    out_df = left_join(out_df, select(chunk_df, script_num, chunkid), by=c("chunkid"))
 
-  parcels$r_chunk_out = list(r_chunk_out=out_df)
-  repdb_save_parcels(parcels["r_chunk_out"], file.path(project_dir, "repdb"))
+    parcels$r_chunk_out = list(r_chunk_out=out_df)
+    repdb_save_parcels(parcels["r_chunk_out"], file.path(project_dir, "repdb"))
+  }
+
 
   parcels = extractr_r_reg_results(project_dir, parcels)
 
